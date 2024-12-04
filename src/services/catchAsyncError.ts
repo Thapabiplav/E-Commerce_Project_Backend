@@ -4,7 +4,7 @@ const errorHandler=(fn:Function)=>{
     fn(req,res).catch((err:Error)=>{
       return res.status(500).json({
         message:"Internal Error",
-        errorMesssage:err.message
+        errorMessage:err.message
       })
     })
   }

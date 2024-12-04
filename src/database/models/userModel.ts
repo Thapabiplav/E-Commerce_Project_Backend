@@ -2,15 +2,13 @@ import {
   Table,
   Column,
   Model,
-  CreatedAt,
   DataType,
-  PrimaryKey,
 } from "sequelize-typescript";
 
 @Table({
   tableName: "users",
   modelName: "User",
-  createdAt: true,
+  timestamps: true,
 })
 class User extends Model {
   @Column({

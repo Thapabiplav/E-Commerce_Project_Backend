@@ -3,7 +3,10 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import userRoute from './routes/userRoute'
+import adminSeeder from "./adminSeeder";
 require('./database/connection')
+
+adminSeeder()
 
 const PORT:number=4000
 const app:Application=express()
