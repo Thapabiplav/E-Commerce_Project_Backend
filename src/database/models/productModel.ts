@@ -41,7 +41,7 @@ class Product extends Model {
   declare productTotalStockQty: number;
 
   @Column({
-    type: DataType.TEXT,
+    type: DataType.STRING,
   })
   declare productImageUrl: string;
 }

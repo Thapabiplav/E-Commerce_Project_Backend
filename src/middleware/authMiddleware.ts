@@ -12,7 +12,7 @@ interface authData extends Request{
   }
 }
 
-enum Roles{
+ export enum Roles{
   Admin='admin',
   Customer='customer'
 }

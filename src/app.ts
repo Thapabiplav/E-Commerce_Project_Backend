@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import userRoute from './routes/userRoute'
+import productRoute from './routes/productRoute'
 import adminSeeder from "./adminSeeder";
 require('./database/connection')
 
@@ -13,6 +14,7 @@ const app:Application=express()
 app.use(express.json())
 
 app.use("",userRoute)
+app.use('/admin',productRoute)
 
 app.listen(PORT,()=>{
   console.log("Server has started at port",PORT);
