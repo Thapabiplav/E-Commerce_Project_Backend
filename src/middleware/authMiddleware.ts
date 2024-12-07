@@ -2,7 +2,7 @@ import { NextFunction, Request,Response } from "express";
 import jwt from 'jsonwebtoken'
 import User from "../database/models/userModel";
 
-interface authData extends Request{
+export interface authData extends Request{
   user?:{
     username:string,
     password:string,
