@@ -5,6 +5,7 @@ dotenv.config()
 import userRoute from './routes/userRoute'
 import productRoute from './routes/productRoute'
 import categoryRoute from './routes/categoryRoute'
+import cartRoute from './routes/cartRoute'
 
 import adminSeeder from "./adminSeeder";
 import categoryController from "./controllers/categoryController";
@@ -19,6 +20,7 @@ app.use(express.json())
 app.use("",userRoute)
 app.use('/admin',productRoute)
 app.use('/admin',categoryRoute)
+app.use('/customer',cartRoute)
 
 app.listen(PORT,()=>{
   categoryController.seedCategory()
