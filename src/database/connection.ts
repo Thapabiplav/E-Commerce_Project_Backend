@@ -3,6 +3,9 @@ import User from "./models/userModel";
 import Product from "./models/productModel";
 import Category from "./models/categoryModel";
 import Cart from "./models/cartModel";
+import Order from "./models/orderModel";
+import OrderDetail from "./models/orderDetailsModel";
+import Payment from "./models/Payment";
 
 const sequelize = new Sequelize({
   database: process.env.DB_NAME,
@@ -35,10 +38,25 @@ sequelize.sync({ force:false}).then(() => {
 Product.belongsTo(Category,{foreignKey:'categoryId'})
 Category.hasOne(Product,{foreignKey:'categoryId'})
 
+// Cart relationship
 User.hasMany(Cart,{foreignKey:'userId'}),
 Cart.belongsTo(User,{foreignKey:'userId'})
 
 Product.hasMany(Cart,{foreignKey:'productId'})
 Cart.belongsTo(Product,{foreignKey:'productId'})
+
+// Table relationship
+
+Order.hasMany(OrderDetail,{foreignKey:'orderId'})
+OrderDetail.belongsTo(Order,{foreignKey:'orderId'})
+
+Product.hasMany(OrderDetail,{foreignKey:'productId'})
+OrderDetail.belongsTo(Product,{foreignKey:'productId'})
+
+Payment.hasMany(Order,{foreignKey:'paymentId'})
+Order.belongsTo(Payment,{foreignKey:'paymentId'})
+
+User.hasMany(Order,{foreignKey:'userId'})
+Order.belongsTo(User,{foreignKey:'userId'})
 
 export default sequelize;

@@ -6,6 +6,7 @@ import userRoute from './routes/userRoute'
 import productRoute from './routes/productRoute'
 import categoryRoute from './routes/categoryRoute'
 import cartRoute from './routes/cartRoute'
+import orderRoute from './routes/orderRoute'
 
 import adminSeeder from "./adminSeeder";
 import categoryController from "./controllers/categoryController";
@@ -21,6 +22,8 @@ app.use("",userRoute)
 app.use('/admin',productRoute)
 app.use('/admin',categoryRoute)
 app.use('/customer',cartRoute)
+app.use('/customer',orderRoute)
+
 
 app.listen(PORT,()=>{
   categoryController.seedCategory()
