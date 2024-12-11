@@ -1,11 +1,15 @@
-import { Response } from "express";
+import { Response,Request } from "express";
 import axios from 'axios'
 import { authData } from "../middleware/authMiddleware";
-import { KhaltiResponse, OrderData, orderStatus, PaymentMethod, TransactionStatus, TransactionVerificationResponse } from "../types/orderTypes";
+import { KhaltiResponse, OrderData,  OrderStatus,  PaymentMethod, PaymentStatus, TransactionStatus, TransactionVerificationResponse } from "../types/orderTypes";
 import Order from "../database/models/orderModel";
 import Payment from "../database/models/Payment";
 import OrderDetail from "../database/models/orderDetailsModel";
 import Product from "../database/models/productModel";
+
+class ExtendedOrder extends Order{
+  declare paymentId:string |null
+}
 
 class OrderController{
   async createOrder(req:authData,res:Response):Promise<void>{
@@ -133,7 +137,7 @@ class OrderController{
   }
 
   async fetchOrderDetails(req:authData,res:Response):Promise<void>{
-    const orderId=req.params
+    const orderId=req.params.id
     const orderDetails= await OrderDetail.findAll({
       where:{
         orderId
@@ -157,31 +161,104 @@ class OrderController{
   }
 
   async cancelOrder(req:authData,res:Response):Promise<void>{
-    const userId=req.user?.id
-    const orderId=req.params
-    const order:any= await Order.findAll({
-      where:{
-        userId,
-        orderId
-      }
+    const userId = req.user?.id 
+    const orderId = req.params.id 
+    const order:any = await Order.findAll({
+        where : {
+            userId, 
+            id : orderId
+        }
     })
-    if(order?.orderStatus === orderStatus.Ontheway || order.orderStatus === orderStatus.Preparation){
-      res.status(200).json({
-        message:"you cannot cancelled order when it is ontheway or preparation"
-      })
-      return
+    if(order?.orderStatus === OrderStatus.Ontheway || order?.orderStatus === OrderStatus.Preparation ){
+         res.status(200).json({
+            message : "You cannot cancel order when it is in ontheway or prepared"
+        })
+        return
     }
-    await Order.update({orderStatus:orderStatus.Cancelled},{
+    await Order.update({
+      orderStatus:OrderStatus.Cancelled
+    },{
       where:{
         id:orderId
       }
     })
+    
     res.status(200).json({
-      message:'order cancelled successfully'
+        message : "Order cancelled successfully"
     })
   }
+
+  //customer side ends
+
+//admin side
+async changeOrderStatus(req:Request,res:Response):Promise<void>{
+  const orderId=req.params.id
+  const orderStatus:OrderStatus=req.body
+  await Order.update({
+    orderStatus:orderStatus
+  },{
+    where:{
+      id:orderId
+    }
+  })
+  res.status(200).json({
+    message:'Order status updated successfully'
+  })
 }
 
-//customer side ends
+async changePaymentStatus (req:Request,res:Response):Promise<void>{
+  const orderId=req.params.id
+  const paymentStatus:PaymentStatus=req.body.paymentStatus
+  const order= await Order.findByPk(orderId)
+  const extendedOrder:ExtendedOrder= order as ExtendedOrder
+  await Payment.update({
+    paymentStatus:paymentStatus
+  },{
+    where:{
+      id:extendedOrder.paymentId  //body ma orderId ako hunxa tyo order table ma find garne rw payment Id leyera update garne paymentstatus
+    }
+  })
+  res.status(200).json({
+    message:`Payment Status of ${orderId} updated successfully to ${paymentStatus}`
+  })
+}
+
+async deleteOrder (req:Request,res:Response):Promise<void>{
+  const orderId=req.params.id
+  const order= await Order.findByPk(orderId)
+  const extendedOrder:ExtendedOrder= order as ExtendedOrder
+  if (order){
+
+    await OrderDetail.destroy({
+      where:{
+        orderId:orderId
+      }
+    })
+  
+    await Payment.destroy({
+      where:{
+        id:extendedOrder.paymentId
+      }
+
+    })
+
+    await Order.destroy({
+      where:{
+        id:orderId
+      }
+    })
+    
+    res.status(200).json({
+      message:'Order deleted successfully'
+    })
+  }
+  else{
+    res.status(404).json({
+      message:'No order with that id found'
+    })
+  }
+  
+}
+}
 
 export default new OrderController

@@ -1,49 +1,54 @@
-import { Table,Column,Model, DataType } from "sequelize-typescript";
+import { Table, Column, Model, DataType } from "sequelize-typescript";
 
 @Table({
-  tableName:"Order",
-  modelName:"orders",
-  timestamps:true
+  tableName: "Order",
+  modelName: "orders",
+  timestamps: true,
 })
-
-class Order extends Model{
+class Order extends Model {
   @Column({
-    primaryKey:true,
-    type:DataType.UUID,
-    defaultValue:DataType.UUIDV4,
-    allowNull:false
+    primaryKey: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+    allowNull: false,
   })
-  declare id:string
-
-  @Column({
-    type:DataType.STRING,
-    allowNull:false,
-    validate:{
-      len:{
-        args:[10,10],
-        msg:'Phone number must be 10 digits'
-      }
-    }
-  })
-  declare phoneNumber:string
+  declare id: string;
 
   @Column({
-    type:DataType.STRING,
-    allowNull:false
+    type: DataType.STRING,
+    allowNull: false,
+    validate: {
+      len: {
+        args: [10, 10],
+        msg: "Phone number must be 10 digits",
+      },
+    },
   })
-  declare shippingAddress:string
+  declare phoneNumber: string;
 
   @Column({
-    type:DataType.FLOAT,
-    allowNull:false
+    type: DataType.STRING,
+    allowNull: false,
   })
-  declare totalAmount:number
+  declare shippingAddress: string;
 
   @Column({
-    type:DataType.ENUM('pending','canceled','onTheWay','preparation','delivered'),
-    defaultValue:'pending'
+    type: DataType.FLOAT,
+    allowNull: false,
   })
-  declare orderStatus:string
+  declare totalAmount: number;
+
+  @Column({
+    type: DataType.ENUM(
+      "pending",
+      "cancelled",
+      "onTheWay",
+      "preparation",
+      "delivered"
+    ),
+    defaultValue: "pending",
+  })
+  declare orderStatus: string;
 }
 
-export default Order
+export default Order;

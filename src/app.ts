@@ -22,7 +22,7 @@ app.use("",userRoute)
 app.use('/admin',productRoute)
 app.use('/admin',categoryRoute)
 app.use('/customer',cartRoute)
-app.use('/customer',orderRoute)
+app.use('/order',orderRoute)
 
 
 app.listen(PORT,()=>{

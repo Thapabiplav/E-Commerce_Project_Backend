@@ -21,7 +21,7 @@ export enum PaymentMethod{
   Khalti='khalti'
 }
 
-enum PaymentStatus{
+export enum PaymentStatus{
   Paid='paid',
   Unpaid='unpaid'
 }
@@ -51,9 +51,9 @@ export interface TransactionVerificationResponse{
   Initiated='Initiated'
 }
 
-export enum orderStatus{
+export enum OrderStatus{
   Pending='pending',
-  Cancelled='cancelled',
+  Cancelled = 'cancelled',
   Ontheway='ontheway',
   Preparation='preparation',
   Delivered='delivered'
