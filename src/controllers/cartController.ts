@@ -30,9 +30,13 @@ class CartController {
         quantity,
       });
     }
+    const product= await Product.findByPk(productId)
       res.status(200).json({
         Message: "Added Successfully",
-        data: cartItem,
+        data: {
+          ...cartItem.toJSON(),
+          product:product?.toJSON()
+        }
       });
    
   }

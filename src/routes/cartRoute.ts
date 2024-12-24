@@ -2,7 +2,7 @@ import express, { Router } from "express";
 import authMiddleware, { Roles } from "../middleware/authMiddleware";
 import errorHandler from "../services/catchAsyncError";
 import cartController from "../controllers/cartController";
-import { error } from "console";
+
 
 const router = express.Router();
 
